@@ -1,6 +1,19 @@
 
-Application created by [ThinkJS](http://www.thinkjs.org)
+# 系统服务客户端
+    注意：
+    需要 Node 8+、 Redis、Nginx、PM2 环境的支持，请确保服务器上安装相关环境
+    系统基于 vue nuxtjs 采用服务端渲染架构
+    服务启动需要访问到 api 服务器上的 redis 服务，用于请求共享的服务数据
 
+# 基本运行
+## 前置准备 
+1. 修改 api 服务地址
+
+    api.config.js
+2. 配置好 nginx
+ 
+  参考 nginx.conf
+     
 ## Install dependencies
 
 ```
@@ -21,36 +34,3 @@ Use pm2 to deploy app on production enviroment.
 pm2 startOrReload pm2.json
 ```
 
-## 补充
-如果希望某些 controller 如 api 不被 nuxt 中间件拦截，请参考下面的代码修改 middleware
-```javascript
-module.exports = options => {
-  let err = null
-  const middleware = async (ctx, next) => {
-    // 处理不被拦截的路径
-    let subdomain = ctx.url.split('/')[1]
-    if (subdomain === 'api') {
-      return next()
-    } else {
-      // let isApi
-      // 默认访问状态为 404
-      ctx.status = 200
-      ctx.req.session = await ctx.session()
-      await nuxt.render(ctx.req, ctx.res)
-      const startTime = Date.now();
-      return next().catch(e => {
-        err = e
-      }).then(() => {
-          const endTime = Date.now();
-          // nuxt.render(ctx.req, ctx.res)
-          if (err) return Promise.reject(err); // 如果后续执行逻辑有错误，则将错误返回
-          return new Promise((resolve, reject) => {
-            // console.log(`request exec time: ${endTime - startTime}ms`);
-          })
-        }
-      )
-    }
-  }
-  return middleware
-}
-```
