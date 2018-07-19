@@ -7,10 +7,12 @@
 
 # 基本运行
 ## 前置准备 
-1. 修改 api 服务地址
+1. 确认 API Server 已正常运行
+2. 修改 api 服务地址
 
     api.config.js
-2. 配置好 nginx
+    
+3. 配置好 nginx
  
   参考 nginx.conf
      
